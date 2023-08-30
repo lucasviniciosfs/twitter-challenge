@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { FeedComponent } from './feed/feed.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TimePipe } from './time.pipe';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    FeedComponent
+    FeedComponent,
+    TimePipe
   ],
   imports: [
     BrowserModule,

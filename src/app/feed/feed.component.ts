@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
 
 
 export interface IPost{
   id: number,
   name: string,
+  username: string,
   text: string,
   dateTime: string
 }
@@ -16,13 +18,15 @@ export interface IPost{
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css'],
 })
-export class FeedComponent implements OnInit {
+export class FeedComponent implements OnInit, OnDestroy {
   id: number = 1;
+  caracteres: number = 130;
+  caracteresRestantes: number = 130;
+  subs: Subscription | undefined;
   profileForm = this.fb.group({
     tweet: [ '', [Validators.required, Validators.maxLength(130)]],
   });
   posts!: IPost[];
-
 
   constructor(private fb: FormBuilder, private modalService: NgbModal) { }
 
@@ -30,7 +34,11 @@ export class FeedComponent implements OnInit {
     this.posts = [];
     this.updateFeed();
     if(this.posts?.length)
-      this.id = this.posts.length;
+      this.id = this.posts.length + 1;
+    this.subs = this.profileForm.get('tweet')?.valueChanges.subscribe(text =>{
+      if(text)
+        this.caracteresRestantes = this.caracteres - text?.length
+    });
   }
 
 	open(content: any, post: IPost) {
@@ -42,18 +50,16 @@ export class FeedComponent implements OnInit {
 		);
 	}
 
-  trackByFn(index: number, item: IPost) {
-    return index;
-  }
-
   onSubmit(){
+    const newId = this.id++;
     const post: IPost = {
-      id: this.id++,
+      id: newId,
       name: 'Lucas Vinicios',
+      username: 'lucasviniciosfs',
       text: this.profileForm.get('tweet')?.value as string,
-      dateTime: new Date().toString()
+      dateTime: new Date().getTime().toString()
     }
-    this.posts.push(post)
+    this.posts.reverse().push(post)
     localStorage.setItem('posts', JSON.stringify(this.posts))
     this.updateFeed();
   }
@@ -61,8 +67,12 @@ export class FeedComponent implements OnInit {
   updateFeed(){
     this.posts = [];
     let storage: IPost[] = JSON.parse(localStorage.getItem('posts') as string);
-    storage.forEach(post => {
+    storage?.reverse().forEach(post => {
       this.posts.push(post)
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subs?.unsubscribe();
   }
 }

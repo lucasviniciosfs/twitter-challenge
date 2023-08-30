@@ -1,50 +1,70 @@
 <div class="container">
   <form [formGroup]="this.profileForm" (ngSubmit)="onSubmit()">
     <div class="card">
+      <h3 class="card-title"><strong>Página inicial</strong></h3>
+      <hr>
       <div class="card-body">
-        <div class="form-floating">
-          <textarea
-            maxlength="130"
-            class="form-control"
-            formControlName="tweet"
-            placeholder="Leave a comment here"
-            id="floatingTextarea2"
-            style="height: 100px"
-          ></textarea>
-          <label for="floatingTextarea2">Text here</label>
+        <div class="row">
+          <div class="col-2" ngClass="colAvatar">
+            <img src="assets/avatar.png"
+              width="150px" height="150px" alt="...">
+          </div>
+          <div class="col-10">
+            <div class="form-floating">
+              <textarea
+                maxlength="130"
+                class="form-control"
+                formControlName="tweet"
+                placeholder="Leave a comment here"
+                id="floatingTextarea2"
+                style="height: 100px"
+              ></textarea>
+              <label for="floatingTextarea2">O que está acontecendo?</label>
+              <a>{{this.caracteresRestantes}} caracteres restantes</a>
+            </div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary">Tweetar</button>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary"
+            [disabled]="!profileForm.valid"
+          >Tweetar</button>
+        </div>
       </div>
     </div>
   </form>
-  <div class="card" *ngFor="let post of posts, trackBy: trackByFn">
-    <h5 class="card-title">{{ post?.id }} {{ post?.name }}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">
-      {{ post?.dateTime | date : "dd/MM/yyyy HH:mm:ss" }}
-    </h6>
-    <div class="card-body">
-      <span for="floatingTextarea2">{{ post?.text }}</span>
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="open(content, post)"
-      >
-        Excluir?
-      </button>
+  <div class="card" *ngFor="let post of posts">
+
+    <h5 class="card-title">{{ post?.name }} </h5>
+    <span class="card-subtitle mb-2 text-muted">
+      @{{ post?.username }} {{ post.dateTime | time }}
+    </span>
+    <div class="card-body bodyPost">
+      <div class="row">
+        <div class="col-10">
+          <span>{{ post?.text }}</span></div>
+        <div class="col-2" style="text-align: right;">
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="open(content, post)"
+          >
+            Excluir
+          </button></div>
+      </div>
     </div>
   </div>
 </div>
 
 <ng-template #content let-modal>
 	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Delete Post</h4>
+		<h4 class="modal-title" id="modal-basic-title">Apagar Post</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss(false)"></button>
 	</div>
 	<div class="modal-body">
-    <span>Are you sure?</span>
+    <span>Tens certeza que quer apagar este post?</span>
 	</div>
 	<div class="modal-footer">
-    <button type="button" class="btn btn-outline-warn" (click)="modal.close(false)">Cancel</button>
-		<button type="button" class="btn btn-outline-dark" (click)="modal.close(true)">Delete</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close(false)">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="modal.close(true)">Apagar</button>
 	</div>
 </ng-template>

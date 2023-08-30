@@ -1,19 +1,21 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgbActiveModal, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FeedComponent } from './feed/feed.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TimePipe } from './time.pipe';
+import { ModalComponent } from './modal/modal.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     FeedComponent,
-    TimePipe
+    TimePipe,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +24,9 @@ import { TimePipe } from './time.pipe';
     NgbModule,
     NgbDatepickerModule
   ],
-  providers: [],
+  providers: [
+    NgbActiveModal
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

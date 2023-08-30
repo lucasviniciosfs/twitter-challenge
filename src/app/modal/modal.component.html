@@ -1,0 +1,11 @@
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Apagar Post</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss(false)"></button>
+	</div>
+	<div class="modal-body">
+    <span>Tens certeza que quer apagar este post?</span>
+	</div>
+	<div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="activeModal.close(false)">Cancelar</button>
+		<button type="button" class="btn btn-danger" (click)="activeModal.close(true)">Apagar</button>
+	</div>

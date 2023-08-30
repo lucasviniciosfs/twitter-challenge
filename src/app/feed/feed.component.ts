@@ -3,14 +3,14 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
+import { ModalComponent } from '../modal/modal.component';
 
-
-export interface IPost{
-  id: number,
-  name: string,
-  username: string,
-  text: string,
-  dateTime: string
+export interface IPost {
+  id: number;
+  name: string;
+  username: string;
+  text: string;
+  dateTime: string;
 }
 
 @Component({
@@ -24,51 +24,53 @@ export class FeedComponent implements OnInit, OnDestroy {
   caracteresRestantes: number = 130;
   subs: Subscription | undefined;
   profileForm = this.fb.group({
-    tweet: [ '', [Validators.required, Validators.maxLength(130)]],
+    tweet: ['', [Validators.required, Validators.maxLength(130)]],
   });
   posts!: IPost[];
 
-  constructor(private fb: FormBuilder, private modalService: NgbModal) { }
+  constructor(private fb: FormBuilder, private modalService: NgbModal) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.posts = [];
     this.updateFeed();
-    if(this.posts?.length)
-      this.id = this.posts.length + 1;
-    this.subs = this.profileForm.get('tweet')?.valueChanges.subscribe(text =>{
-      if(text)
-        this.caracteresRestantes = this.caracteres - text?.length
-    });
+    if (this.posts?.length) this.id = this.posts.length + 1;
+    this.subs = this.profileForm
+      .get('tweet')
+      ?.valueChanges.subscribe((text) => {
+        if (text) this.caracteresRestantes = this.caracteres - text?.length;
+      });
   }
 
-	open(content: any, post: IPost) {
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				if(result)
-          this.posts = this.posts.filter(item => item.id != post.id)
-			}
-		);
-	}
+  open(post: IPost) {
+    this.modalService
+      .open(ModalComponent, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then((result) => {
+        if (result)
+          this.posts = this.posts.filter((item) => item.id != post.id);
+      },
+			() => {});
+  }
 
-  onSubmit(){
+  onSubmit() {
     const newId = this.id++;
     const post: IPost = {
       id: newId,
       name: 'Lucas Vinicios',
       username: 'lucasviniciosfs',
       text: this.profileForm.get('tweet')?.value as string,
-      dateTime: new Date().getTime().toString()
-    }
-    this.posts.reverse().push(post)
-    localStorage.setItem('posts', JSON.stringify(this.posts))
+      dateTime: new Date().getTime().toString(),
+    };
+    this.posts.reverse().push(post);
+    localStorage.setItem('posts', JSON.stringify(this.posts));
     this.updateFeed();
+    this.profileForm.reset()
   }
 
-  updateFeed(){
+  updateFeed() {
     this.posts = [];
     let storage: IPost[] = JSON.parse(localStorage.getItem('posts') as string);
-    storage?.reverse().forEach(post => {
-      this.posts.push(post)
+    storage?.reverse().forEach((post) => {
+      this.posts.push(post);
     });
   }
 

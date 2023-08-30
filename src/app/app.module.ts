@@ -6,9 +6,8 @@ import { NgbActiveModal, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FeedComponent } from './feed/feed.component';
-import { TimePipe } from './time.pipe';
 import { ModalComponent } from './modal/modal.component';
-
+import { TimePipe } from './pipe/time.pipe';
 
 @NgModule({
   declarations: [
